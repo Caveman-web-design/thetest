@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Icy Tower Clone</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { background: #e0f7fa; display: block; margin: auto; }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="480" height="320"></canvas>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let player = { x: 50, y: 150, width: 20, height: 20, gravity: 0.5, jumpStrength: -10, velocityY: 0, jumping: false };
+
+        function drawPlayer() {
+            ctx.fillStyle = '#FF5733';
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+        }
+
+        function update() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawPlayer();
+
+            player.velocityY += player.gravity;
+            player.y += player.velocityY;
+
+            if (player.y + player.height >= canvas.height) {
+                player.y = canvas.height - player.height;
+                player.velocityY = 0;
+                player.jumping = false;
+            }
+        }
+
+        function jump() {
+            if (!player.jumping) {
+                player.velocityY += player.jumpStrength;
+                player.jumping = true;
+            }
+        }
+
+        document.addEventListener('keydown', (event) => {
+            if (event.code === 'Space') {
+                jump();
+            }
+        });
+
+        function gameLoop() {
+            update();
+            requestAnimationFrame(gameLoop);
+        }
+
+        gameLoop();
+    </script>
+</body>
+</html>
